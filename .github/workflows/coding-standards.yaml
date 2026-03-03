@@ -1,0 +1,23 @@
+name: coding-standards
+
+on: pull_request
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Create Docker Container
+        run: docker compose up --build --detach
+
+      - name: Format Code
+        run: docker exec go-crontab gofmt -w -e .
+
+      - name: Push to GitHub
+        run: ./.github/scripts/push.sh "go fmt"
