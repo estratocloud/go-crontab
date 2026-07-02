@@ -1,0 +1,30 @@
+name: coverage
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Create Docker Container
+        run: |
+          docker build . -t go-crontab-image
+          docker run --interactive --detach --volume ${{ github.workspace }}:/app --name go-crontab go-crontab-image
+
+      - name: Unit Tests
+        run: docker exec go-crontab go test ./crontab/... -v -cover
+
+      - name: Generate Coverage
+        run: docker exec go-crontab go test ./crontab/... -coverprofile=dev/coverage.txt
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v7
+        with:
+          files: ./dev/coverage.txt
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
