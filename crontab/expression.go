@@ -8,7 +8,7 @@ import (
 
 type Expression struct {
 	Minute  internal.Field
-Hour    internal.Field
+	Hour    internal.Field
 	Day     internal.Field
 	Month   internal.Field
 	Weekday internal.Field
