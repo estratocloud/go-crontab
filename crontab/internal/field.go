@@ -30,6 +30,7 @@ func (f Field) MustFormat() string {
 	return f.value
 }
 
+// Every Create a Field instance that represents every possible value ("*")
 func Every() Field {
 	return Field{value: "*"}
 }
